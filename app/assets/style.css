@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Mono|Ubuntu|Ubuntu+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1em;
+    line-height: 1.2em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', sans-serif;
+    text-transform: uppercase;
+    line-height: 1.3em;
+}
+
+p {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 1.1em;
+}
+
+/*pre {
+    background: #D6F0FF;
+    font-family: PT Mono, monospace;
+    color: #092944;
+    margin: 1em auto;
+    padding: 1em 2em;
+    border: 1px #0C72C6 solid;
+    border-radius: 5px;
+}*/
+
+.workarea {
+    margin: 2em auto;
+}
+
+.left {
+
+    float: left;
+    background: #E4F3FB;
+    padding: 0 1.5em;
+    border-radius: 5px;
+}
+.right {
+    float: right;
+}
+label, .right > p {
+    cursor: pointer;
+}
+
+input[type=text], input[type=number], textarea, select {
+    margin: 0.5em auto;
+    width: 250px;
+    padding: 0.5em;
+    font-family: Ubuntu Mono, monospace;
+    border: none;
+    border-bottom: 1px #0C72C6 dotted;
+    font-size: 1.2em;
+    color: #0062B4;
+    outline-style: none;
+}
+
+textarea {
+    background: #DEEEFB;
+    height: 150px;
+}
+
+select {
+    overflow-y: auto;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+button {
+    background: #0062B4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 265px;
+    margin: 0.5em auto;
+    
+    padding: 0.5em;
+    font-family: PT Mono, monospace;
+    font-size: 1.5em;
+}
+
+.ufListResult {
+    color: #0062B4;
+}
+
+table {
+    text-align:center;
+}
+
+table td {
+    vertical-align: central;
+}
+
+/*table, tr, th, td {
+    width: 100%;
+    border: 1px #0C72C6 solid;
+    border-collapse: collapse;    
+}
+th, td {
+    padding: 1.2em;    
+}
+
+td {
+    text-align: center;
+}*/
+
+
+.ufList {
+    font-weight: 700;
+}
+
+.none {
+    display: none;
+}
+
+.slide-transition {
+    transition: all 2s; 
+}
