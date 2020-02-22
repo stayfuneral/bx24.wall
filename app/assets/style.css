@@ -51,13 +51,12 @@ label, .right > p {
 
 input[type=text], input[type=number], textarea, select {
     margin: 0.5em auto;
-    width: 250px;
+    width: 100%;
     padding: 0.5em;
-    font-family: Ubuntu Mono, monospace;
-    border: none;
-    border-bottom: 1px #0C72C6 dotted;
+    font-family: 'Nunito', sans-serif;
+    border: 1px solid #c6cdd3;
     font-size: 1.2em;
-    color: #0062B4;
+    color: #535c69;
     outline-style: none;
 }
 

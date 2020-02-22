@@ -1,7 +1,7 @@
 <?php
 
-require __DIR__ . '/app/classes/crest.php';
-require_once __DIR__.'/app/configs/db.php';
+require __DIR__ . '/../classes/crest.php';
+require_once __DIR__.'/../configs/db.php';
 
 $DB = new DB();
 
@@ -15,16 +15,15 @@ if(!empty($jsonDecodedData)) {
     $materialType = intval($jsonDecodedData->materialType);
     $paymentType = htmlspecialchars($jsonDecodedData->paymentType);
     $transportCost = intval($jsonDecodedData->transportCost);
-
+    (!empty($jsonDecodedData->dealId)) ? $dealId = intval($jsonDecodedData->dealId) : null;
     $raisingFactor = 1.10;
 
     $result = [];
+    (!empty($jsonDecodedData->dealId)) ? $result['dealId'] = $dealId : null;
     $result['result'] = 'success';
-    $result['holeCount'] = $count;
-    $result['materialType'] = $materialType;
-    $result['paymentType'] = $paymentType;
     if($diameter > 350) {
-        $result['finalPrice'] = 'договорная цена';
+        $agreedPrice = 'Цена договорная';
+        $result['finalPrice'] = 'Цена договорная';
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
     } else {
@@ -39,22 +38,37 @@ if(!empty($jsonDecodedData)) {
         if($paymentType === 'wire') {
             $diameterPrice = (float)(number_format(($diameterPrice * $raisingFactor), 2, '.',''));
         }
-        $holePrice = $diameterPrice * $width;
+        $holePrice = (($diameterPrice * $width) < 800) ? 800 : ($diameterPrice * $width);
+        $finalPrice = (($holePrice * $count) + $transportCost) < 5000 ? 5000 : ($holePrice * $count) + $transportCost;
 
-        if($holePrice < 800) {
-            $holePrice = 800;
+        $contactType = CRest::callBatch([
+            'get_deal' => [
+                'method' => 'crm.deal.get',
+                'params' => [
+                    'ID' => $dealId
+                ]
+            ],
+            'get_contact' => [
+                'method' => 'crm.contact.get',
+                'params' => [
+                    "ID" => '$result[get_deal][CONTACT_ID]'
+                ]
+            ]
+        ])['result']['result']['get_contact']['TYPE_ID'];
+
+        ($contactType === 'SUPPLIER' || $contactType === 'PARTNER') ? $finalPrice = $finalPrice - ($finalPrice * 0.10) : null;
+        if(!isset($agreedPrice)) {
+            $setPrice = CRest::call('crm.deal.update', [
+                'id' => $dealId,
+                'fields' => [
+                    'OPPORTUNITY' => $finalPrice
+                ]
+            ]);
         }
-        
-        $finalPrice = ($holePrice * $count) + $transportCost;
-
-        if($finalPrice < 5000) {
-            $finalPrice = 5000;
-        }
-
-        $result['startDiameterId'] = $startDiameterId;
-        $result['startDiameterPrice'] = $diameterPrice;
         $result['oneHolePrice'] = $holePrice;
         $result['finalPrice'] = $finalPrice;
+        $result['updateDeal'] = (!empty($setPrice['result'])) ? $setPrice['result'] : $setPrice;
+        $result['contact'] = $contactType;
 
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }

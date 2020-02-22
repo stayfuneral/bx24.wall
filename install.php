@@ -6,7 +6,7 @@ $setPlacement = CRest::call('placement.bind', [
     'HANDLER' => 'https://wall.bot24.xyz/index.php',
     'TITLE' => 'Расчёт стоимости'
 ]);
-
+writeToLog(__DIR__.'/log/install_'.date('d.m.Y_H:i:s.').'txt', [$result, $setPlacement], 'New installation');
 /*
  * Сюда можно добавить любой код, который должен выполняться единоразово в процессе установки
  */
