@@ -28,17 +28,18 @@ $dealInfo = CRest::call('crm.deal.get', ['ID' => $dealId])['result'];
                         <td class="col-6"><input class="formData" type="number" name="count" id="count"></td>
                     </tr>
                     <tr class="row">
-                        <td class="col-3">Диаметр отверстия</td>
+                        <td class="col-3">Диаметр отверстия, мм</td>
                         <td class="col-6"><input class="formData" type="number" name="diameter" id="diameter"></td>
                     </tr>
                     <tr class="row">
-                        <td class="col-3">Толщина отверстия</td>
+                        <td class="col-3">Толщина отверстия, см</td>
                         <td class="col-6"><input class="formData" type="number" name="width" id="width"></td>
                     </tr>
+
                     <tr class="row">
                         <td class="col-3">Материал стены</td>
                         <td class="col-6">
-                            <select class="formData" name="wallMaterial" id="walMaterial">
+                            <select name="materialType" id="materialType" class="formData">
                                 <option></option>
                                 <option value="1">Бетон</option>
                                 <option value="2">Кирпич</option>
@@ -56,12 +57,12 @@ $dealInfo = CRest::call('crm.deal.get', ['ID' => $dealId])['result'];
                         </td>
                     </tr>
                     <tr class="row">
-                        <td class="col-3">Выезд за пределы МКАД</td>
-                        <td class="col-6"><input type="checkbox" name="mkadOut" id="mkadOut"></td>
+                        <td class="col-3">Транспортные расходы</td>
+                        <td class="col-6"><input class="formData" type="number" name="transportCost" id="transportCost"></td>
                     </tr>
                     <tr class="row">
                         <td class="col-3">
-                            <button>Рассчитать стоимость</button>
+                            <button type="submit">Рассчитать стоимость</button>
                         </td>
                         <td class="col-6">
                             <h3 class="font-weight-bold">Итого: <span class="text-primary">5000 ₽</span></h3>
