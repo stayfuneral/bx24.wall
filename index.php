@@ -25,7 +25,7 @@ if(!empty($_REQUEST['PLACEMENT_OPTIONS'])) {
         <div id="app" class="container-fluid">
             <h1>Расчёт стоимости по сделке <?=$dealInfo['TITLE']?></h1>
 
-            <table class="table table-responsive-sm table-borderless align-middle text-left">
+            <table class="table table-responsive-sm table-borderless text-left">
                 <tbody>
                     <tr class="row">
                         <td class="col-3">Количество отверстий</td>
@@ -67,7 +67,7 @@ if(!empty($_REQUEST['PLACEMENT_OPTIONS'])) {
                     <tr class="row">
                         <td class="col-3">
                             <input class="formData" type="hidden" name="dealId" value="<?=$dealId?>" id="dealId">
-                            <button type="submit">Рассчитать стоимость</button>
+                            <button class="ui-btn ui-btn-primary" type="submit">Рассчитать стоимость</button>
                         </td>
                         <td class="col-6">
                             <div id="result"></h3>
