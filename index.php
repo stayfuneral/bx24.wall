@@ -4,10 +4,6 @@ if(!empty($_REQUEST['PLACEMENT_OPTIONS'])) {
     $dealId = $placementOptions->ID;
     $dealInfo = CRest::call('crm.deal.get', ['ID' => $dealId])['result'];
 }
- 
-
-
-
 ?>
 
 <!DOCTYPE html>
