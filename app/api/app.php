@@ -1,77 +1,72 @@
 <?php
 
-require __DIR__ . '/../classes/crest.php';
-require_once __DIR__.'/../configs/db.php';
+require __DIR__.'/vendor/autoload.php';
 
-$DB = new DB();
+$jsonRawRequest = file_get_contents('php://input');
+$Request = json_decode($jsonRawRequest);
 
-$jsonRawData = file_get_contents('php://input');
-$jsonDecodedData = json_decode($jsonRawData);
+$hole = new Hole;
 
-if(!empty($jsonDecodedData)) {
-    $count = intval($jsonDecodedData->count);
-    $diameter = intval($jsonDecodedData->diameter);
-    $width = intval($jsonDecodedData->width);
-    $materialType = intval($jsonDecodedData->materialType);
-    $paymentType = htmlspecialchars($jsonDecodedData->paymentType);
-    $transportCost = intval($jsonDecodedData->transportCost);
-    (!empty($jsonDecodedData->dealId)) ? $dealId = intval($jsonDecodedData->dealId) : null;
-    $raisingFactor = 1.10;
+if(!empty($Request)) {
+    $dealId = $Request->dealId;
+    $paymentType = htmlspecialchars($Request->paymentType);
+    $transportCost = $Request->transportCost;
 
-    $result = [];
-    (!empty($jsonDecodedData->dealId)) ? $result['dealId'] = $dealId : null;
-    $result['result'] = 'success';
-    if($diameter > 350) {
-        $agreedPrice = 'Цена договорная';
-        $result['finalPrice'] = 'Цена договорная';
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
-    } else {
-        $startDiameterSql = "SELECT * FROM DIAMETERS WHERE start_diameter <= $diameter ORDER BY start_diameter DESC LIMIT 1";
-        $startDiameterQuery = $DB->customSelect($startDiameterSql);
-        $startDiameterId = intval($startDiameterQuery[0]['id']);
-
-        $diameterPriceSql = "SELECT price FROM PRICES WHERE diameter_id = $startDiameterId && material_type_id = $materialType";
-
-        $diameterPriceQuery = $DB->customSelect($diameterPriceSql);
-        $diameterPrice = intval($diameterPriceQuery[0]['price']);
-        if($paymentType === 'wire') {
-            $diameterPrice = (float)(number_format(($diameterPrice * $raisingFactor), 2, '.',''));
-        }
-        $holePrice = (($diameterPrice * $width) < 800) ? 800 : ($diameterPrice * $width);
-        $finalPrice = (($holePrice * $count) + $transportCost) < 5000 ? 5000 : ($holePrice * $count) + $transportCost;
-
-        $contactType = CRest::callBatch([
-            'get_deal' => [
-                'method' => 'crm.deal.get',
-                'params' => [
-                    'ID' => $dealId
-                ]
-            ],
-            'get_contact' => [
-                'method' => 'crm.contact.get',
-                'params' => [
-                    "ID" => '$result[get_deal][CONTACT_ID]'
-                ]
-            ]
-        ])['result']['result']['get_contact']['TYPE_ID'];
-
-        ($contactType === 'SUPPLIER' || $contactType === 'PARTNER') ? $finalPrice = $finalPrice - ($finalPrice * 0.10) : null;
-        if(!isset($agreedPrice)) {
-            $setPrice = CRest::call('crm.deal.update', [
-                'id' => $dealId,
-                'fields' => [
-                    'OPPORTUNITY' => $finalPrice
-                ]
-            ]);
-        }
-        $result['oneHolePrice'] = $holePrice;
-        $result['finalPrice'] = $finalPrice;
-        $result['updateDeal'] = (!empty($setPrice['result'])) ? $setPrice['result'] : $setPrice;
-        $result['contact'] = $contactType;
-
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
+    $arDiameter = $Request->diameter;
+    $arWidth = $Request->width;
+    $arTypes = $Request->materialType;
 
     
+
+    $holeCounter = count($Request->diameter);
+
+    $response = [
+        'result' => 'success',
+        'dealId' => $dealId,
+        'holeCounter' => $holeCounter,
+        'ts' => time()        
+    ];
+
+    $commentInfo = [];
+    
+
+    for($i = 0; $i < $holeCounter; $i++) {
+        if($arDiameter[$i] < 350) {
+            $startDiameterPrice = $hole->getDiameterPrice($arTypes[$i], $arDiameter[$i], $paymentType);
+            $holePrice = $hole->getHolePrice($startDiameterPrice, $arWidth[$i]);
+            $commentInfo['Отв. '.($i+1)] = 'Диаметр отверстия:  '. $arDiameter[$i].'мм,<br>'.
+            'Толщина отверстия: '. $arWidth[$i] .'см,<br>'.
+            'Цена отверстия: '. $holePrice.' руб.';
+            $hole->holePrices[] = $holePrice;
+            $hole->finalPrice +=$holePrice;
+        } else {
+            $commentInfo[] = 'Диаметр отверстия:  '. $arDiameter[$i].'мм,<br>'.
+            'Толщина отверстия: '. $arWidth[$i] .'см,<br />'.
+            'Цена договорная';
+        }        
+    }
+    $hole->finalPrice = (($hole->finalPrice + $transportCost) < 5000) ? 5000 : $hole->finalPrice + $transportCost;
+
+    $contactType = $hole->getClientType($dealId);
+
+    if($contactType === 'SUPPLIER' || $contactType === 'PARTNER') {
+        $hole->finalPrice = $hole->finalPrice - ($hole->finalPrice * $hole::CLIENT_DISCOUNT);
+    }
+
+    $fields = [
+        'OPPORTUNITY' => $hole->finalPrice
+    ];
+    $comment = '';
+    foreach($commentInfo as $key => $value) {
+        $comment .= '<p><b>'.$key.'</b><br>'.$value.'</p>';
+    }
+    $fields['COMMENTS'] = $comment;
+
+    $dealSum = $hole->setDealSum($dealId, $fields);
+
+    $response['dealUpdate'] = $dealSum;
+    $response['holePrices'] = $hole->holePrices;
+    $response['finalPrice'] = $hole->finalPrice;
+    
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
 }
