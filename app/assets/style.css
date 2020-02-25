@@ -25,16 +25,17 @@ p {
     margin: 2em auto;
 }
 
-input[type=text], input[type=number], textarea, select {
+/* input[type=text], input[type=number], textarea, select {
     margin: 0.5em auto;
     width: 100%;
-    padding: 0.1em o.5em;
+    height: 60px;
+    padding: 0.2em 2em;
     font-family: 'Nunito', sans-serif;
     border: 1px solid #c6cdd3;
     font-size: 1.2em;
     color: #535c69;
     outline-style: none;
-}
+} */
 
 select {
     overflow-y: auto;
@@ -91,4 +92,20 @@ select {
 
 .ui-btn-light:active {
     background: #dde2e5;
+}
+
+.ui-btn-danger {
+    background: #f1361a;
+    color: #fff;
+    border-color: #f1361a;
+}
+
+.ui-btn-danger:hover {
+    background: #cc1c00;
+    border-color: #cc1c00;
+}
+
+.ui-btn-danger:active {
+    background: #d24430;
+    border-color: #d24430;
 }

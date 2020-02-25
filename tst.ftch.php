@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 require __DIR__.'/vendor/autoload.php';
@@ -71,5 +70,3 @@ if(!empty($Request)) {
     
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
 }
-=======
->>>>>>> dev

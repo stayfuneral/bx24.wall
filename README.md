@@ -8,6 +8,12 @@
 
 [SDK Битрикс24](https://github.com/bitrix-tools/crest)
 
+### Composer
+
+Для автозагрузки классов используйте команду `composer install`. 
+
+**не забудьте перед этим рассортировать нужные файлы по папкам**
+
 ### Интерфейс прриложения
 
 ![interface.png](https://wall.bot24.xyz/screens/interface.png)
