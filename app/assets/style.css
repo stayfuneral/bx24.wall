@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Mono|Ubuntu|Ubuntu+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1em;
+    line-height: 1.2em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', sans-serif;
+    text-transform: uppercase;
+    line-height: 1.3em;
+}
+
+p {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 1.1em;
+}
+
+.workarea {
+    margin: 2em auto;
+}
+
+/* input[type=text], input[type=number], textarea, select {
+    margin: 0.5em auto;
+    width: 100%;
+    height: 60px;
+    padding: 0.2em 2em;
+    font-family: 'Nunito', sans-serif;
+    border: 1px solid #c6cdd3;
+    font-size: 1.2em;
+    color: #535c69;
+    outline-style: none;
+} */
+
+select {
+    overflow-y: auto;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.ui-btn {
+    border: none;
+    border-radius: 2px;
+    padding: 0.5em 1em;
+    text-transform: uppercase!important;
+    font-weight: 500;
+}
+
+.ui-btn-primary {
+    background: #3bc8f5;
+    border: none;
+    color: #fff;    
+}
+
+.ui-btn-primary:active {
+    background: #12b1e3;
+}
+
+.ui-btn-primary:hover {
+    background: #3eddff;
+}
+
+.ui-btn-success {
+    background: #bbed21;
+    color: #535c69;
+}
+
+.ui-btn-success:active {
+    background: #b2e232
+}
+
+.ui-btn-success:hover {
+    background: #d2f95f;
+}
+
+.ui-btn-light {
+    background: transparent;
+    border: 1px #c6cdd3 solid;
+    color: #535b69;
+}
+
+.ui-btn-light:hover {
+    background: #cfd4d8;
+}
+
+.ui-btn-light:active {
+    background: #dde2e5;
+}
+
+.ui-btn-danger {
+    background: #f1361a;
+    color: #fff;
+    border-color: #f1361a;
+}
+
+.ui-btn-danger:hover {
+    background: #cc1c00;
+    border-color: #cc1c00;
+}
+
+.ui-btn-danger:active {
+    background: #d24430;
+    border-color: #d24430;
+}

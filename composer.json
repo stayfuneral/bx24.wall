@@ -1,0 +1,19 @@
+{
+    "name": "rgonyukov/bx24_wall_app",
+    "description": "local application for deal sum calculation",
+    "authors": [
+        {
+            "name": "Roman Gonyukov",
+            "email": "roman@bx24-store.ru",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "app/classes/"
+        ],
+        "files": [
+            "app/configs/settings.php"
+        ]
+    }
+}
